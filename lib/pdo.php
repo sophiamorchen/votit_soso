@@ -2,7 +2,7 @@
 
 
 try {
-    $pdo =new PDO($PDO, );
+    $pdo =new PDO();
 } catch(Exception $e) {
     die('Erreur ' .$e->getMessage());
 };
