@@ -1,5 +1,10 @@
 <?php
 require_once 'lib/config.php';
+require_once 'lib/pdo.php';
+// toujours appeler pdo après config, car pdo dépend de confif (cf : constantes)
+
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
