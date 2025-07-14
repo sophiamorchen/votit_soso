@@ -1,7 +1,7 @@
 <?php require_once 'templates/header.php';
 require_once 'lib/poll.php';
 
-$polls = getPolls($pdo);
+$polls = getPolls($pdo, HOME_POLLS_LIMIT);
 
 ?>
 
@@ -20,7 +20,6 @@ $polls = getPolls($pdo);
             Créez, partagez, analysez : nous vous offrons une plateforme pour explorer les tendances et enrichir les
             débats techniques. </p>
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
-            <button type="button" class="btn btn-primary btn-lg px-4 me-md-2">Voter</button>
             <button type="button" class="btn btn-outline-secondary btn-lg px-4">Voir tous les sondages</button>
         </div>
     </div>
