@@ -2,7 +2,6 @@
 require_once 'lib/poll.php';
 
 $polls = getPolls($pdo);
-var_dump($polls);
 
 ?>
 
@@ -30,10 +29,9 @@ var_dump($polls);
 <div class="row text-center">
 
     <h2>Les derniers sondages :</h2>
-    <?php foreach($polls as $key=>$poll){
-        require 'templates/poll_part.php';
-    }?>
-
+    <?php foreach($polls as $poll){
+    require 'templates/poll_part.php';
+    } ?>
 </div>
 
 
