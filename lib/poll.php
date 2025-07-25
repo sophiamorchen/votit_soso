@@ -31,3 +31,11 @@ function getPollById(PDO $pdo, int $id):array|bool
     $query->execute();
     return $query->fetch(PDO::FETCH_ASSOC);
 }
+
+function getPollResultsByPollId(PDO $pdo, INT $id): array
+{
+    $query = $pdo->prepare('SELECT * FROM poll_item WHERE poll_id = :id');
+    $query->bindValue(':id', $id, PDO::PARAM_INT);
+    $query->execute();
+    return $query->fetchAll(PDO::FETCH_ASSOC);
+}

@@ -5,10 +5,13 @@ require_once 'lib/poll.php';
 $error_404 = false;
 
 if (isset($_GET['id'])){
+    // /!\  type STRING à changer car méthode getPollById attend du INT cela s'appelle un "cast"
     $id = (int)$_GET['id'];
     $poll = getPollById($pdo, $id);
     if($poll){
         
+        $results = getPollResultsByPollId($pdo, $id);
+        var_dump($results);
     } else {
         $error_404 = true;
         // ou bien : header("Location: page.php");exit(); --> ⚠️ exit(); est fortement recommandé juste après pour éviter d’exécuter du code en trop.
@@ -19,9 +22,7 @@ if (isset($_GET['id'])){
 }
 
 if(!$error_404) {
-
 ?>
-
 <div class="row align-items-center g-5 py-5">
     <div class="col-lg-6">
         <h1 class="display-5 fw-bold lh-1 mb-3"><?=$poll['title']?></h1>
@@ -38,7 +39,6 @@ if(!$error_404) {
             </div>
         </div>
     </div>
-
 </div>
 <?php } else {
     ?>
