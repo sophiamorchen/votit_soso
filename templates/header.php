@@ -2,6 +2,11 @@
 require_once 'lib/config.php';
 require_once 'lib/pdo.php';
 // toujours appeler pdo après config, car pdo dépend de confif (cf : constantes)
+$mainMenu = [
+    'index.php' => 'Accueil',
+    'sondages.php' => 'Les sondages',
+];
+
 
 
 
@@ -15,7 +20,18 @@ require_once 'lib/pdo.php';
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/override-bootstrap.css">
-    <title>Votit</title>
+    <!--
+    basename($_SERVER['SCRIPT_FILENAME']) nous donne la clé (ex. "index.php"),
+    $mainMenu[...] nous renvoie la valeur associée à cette clé (ex. "Accueil").
+    -->
+    <title><?php
+    if(isset($mainMenu[basename($_SERVER['SCRIPT_FILENAME'])])){
+        echo $mainMenu[basename($_SERVER['SCRIPT_FILENAME'])].' - VotIt';
+        }else {
+        echo 'VotIt';
+        }?>
+    </title>
+
 </head>
 
 <body>
@@ -31,13 +47,13 @@ require_once 'lib/pdo.php';
                     </svg>
                 </a>
             </div>
-
-            <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 link-secondary">Home</a></li>
-                <li><a href="#" class="nav-link px-2">Features</a></li>
-                <li><a href="#" class="nav-link px-2">Pricing</a></li>
-                <li><a href="#" class="nav-link px-2">FAQs</a></li>
-                <li><a href="#" class="nav-link px-2">About</a></li>
+            <ul class="nav nav-pills">
+                <?php foreach ($mainMenu as $page => $titre) {?>
+                <li class="nav-item">
+                    <a href="<?=$page; ?>"
+                        class="nav-link <?php if( $page === basename($_SERVER['SCRIPT_NAME'])){ echo 'active';}?>"><?= $titre; ?></a>
+                </li>
+                <?php }?>
             </ul>
 
             <div class="col-md-3 text-end"> <button type="button" class="btn btn-outline-primary me-2">Login</button>

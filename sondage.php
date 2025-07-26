@@ -7,11 +7,10 @@ $error_404 = false;
 if (isset($_GET['id'])){
     // /!\  type STRING à changer car méthode getPollById attend du INT cela s'appelle un "cast"
     $id = (int)$_GET['id'];
+    // On veut dabord voir si le sondage existe avant d'appeler les résultats du sondage que nous voulons afficher sur la page.
     $poll = getPollById($pdo, $id);
     if($poll){
-        
         $results = getPollResultsByPollId($pdo, $id);
-        var_dump($results);
     } else {
         $error_404 = true;
         // ou bien : header("Location: page.php");exit(); --> ⚠️ exit(); est fortement recommandé juste après pour éviter d’exécuter du code en trop.

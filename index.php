@@ -3,6 +3,7 @@ require_once 'lib/poll.php';
 
 $polls = getPolls($pdo, HOME_POLLS_LIMIT);
 
+
 ?>
 
 
