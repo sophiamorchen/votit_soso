@@ -1,4 +1,4 @@
-<?php require_once 'templates/header.php';
+<?php require_once 'lib/required_files.php';
 require_once 'lib/poll.php';
 
 
@@ -10,6 +10,7 @@ if (isset($_GET['id'])){
     // On veut dabord voir si le sondage existe avant d'appeler les résultats du sondage que nous voulons afficher sur la page.
     $poll = getPollById($pdo, $id);
     if($poll){
+        $pageTitle = $poll['title'];
         $results = getPollResultsByPollId($pdo, $id);
     } else {
         $error_404 = true;
@@ -19,7 +20,7 @@ if (isset($_GET['id'])){
 } else {
     $error_404 = true;
 }
-
+require_once 'templates/header.php';
 if(!$error_404) {
 ?>
 <div class="row align-items-center g-5 py-5">

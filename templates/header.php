@@ -1,11 +1,13 @@
 <?php
 require_once 'lib/config.php';
-require_once 'lib/pdo.php';
+require_once 'lib/poll.php';
 // toujours appeler pdo après config, car pdo dépend de confif (cf : constantes)
 $mainMenu = [
     'index.php' => 'Accueil',
     'sondages.php' => 'Les sondages',
 ];
+
+
 
 
 
@@ -27,7 +29,10 @@ $mainMenu = [
     <title><?php
     if(isset($mainMenu[basename($_SERVER['SCRIPT_FILENAME'])])){
         echo $mainMenu[basename($_SERVER['SCRIPT_FILENAME'])].' - VotIt';
-        }else {
+        } elseif(isset($pageTitle)) {
+            echo $pageTitle. ' - VotIt';
+        }
+        else {
         echo 'VotIt';
         }?>
     </title>
