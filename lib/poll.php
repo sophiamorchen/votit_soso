@@ -1,8 +1,7 @@
 <?php
 function getPolls(PDO $pdo, int $limit = null):array
 {
-    $sql = "SELECT poll.*, category.name
-    AS category_name
+    $sql = "SELECT poll.*, category.name AS category_name
     FROM poll
     JOIN category
     ON category.id = poll.category_id
@@ -34,7 +33,13 @@ function getPollById(PDO $pdo, int $id):array|bool
 
 function getPollResultsByPollId(PDO $pdo, INT $id): array
 {
-    $query = $pdo->prepare('SELECT * FROM poll_item WHERE poll_id = :id');
+    $query = $pdo->prepare('SELECT pi.id, pi.name, COUNT(upi.poll_item_id) AS votes
+                                    FROM poll_item AS pi
+                                    LEFT JOIN user_poll_item upi
+                                    on upi.poll_item_id = pi.id
+                                    WHERE poll_id = :id
+                                    GROUP BY pi.id
+                                    ORDER BY votes DESC');
     $query->bindValue(':id', $id, PDO::PARAM_INT);
     $query->execute();
     return $query->fetchAll(PDO::FETCH_ASSOC);

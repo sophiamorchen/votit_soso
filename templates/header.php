@@ -22,18 +22,18 @@ $mainMenu = [
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
     <link rel="stylesheet" href="assets/css/override-bootstrap.css">
-    <!--
-    basename($_SERVER['SCRIPT_FILENAME']) nous donne la clé (ex. "index.php"),
-    $mainMenu[...] nous renvoie la valeur associée à cette clé (ex. "Accueil").
-    -->
+    <?php
+    // basename($_SERVER['SCRIPT_FILENAME']) nous donne la clé (ex. "index.php"),
+    // $mainMenu[...] nous renvoie la valeur associée à cette clé (ex. "Accueil").
+    ?>
     <title><?php
     if(isset($mainMenu[basename($_SERVER['SCRIPT_FILENAME'])])){
-        echo $mainMenu[basename($_SERVER['SCRIPT_FILENAME'])].' - VotIt';
+        echo $mainMenu[basename($_SERVER['SCRIPT_FILENAME'])].' - '.SITE_NAME;
         } elseif(isset($pageTitle)) {
-            echo $pageTitle. ' - VotIt';
+            echo $pageTitle. ' - '.SITE_NAME;
         }
         else {
-        echo 'VotIt';
+        echo SITE_NAME;
         }?>
     </title>
 
