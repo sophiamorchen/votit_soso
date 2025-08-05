@@ -28,16 +28,16 @@ require_once 'templates/header.php';
 
 if (!$error_404) {
     ?>
-<div class="row align-items-center g-5 py-5">
-    <div class="col-lg-6">
-        <h1 class="display-5 fw-bold lh-1 mb-3"><?= $poll['title'] ?></h1>
-        <p class="lead"><?= $poll['description'] ?>
-        </p>
-    </div>
-    <div class="col-lg-6">
-        <h2>Résultats</h2>
-        <div class="results">
-            <?php foreach ($results as $index => $result) {
+    <div class="row align-items-center g-5 py-5">
+        <div class="col-lg-6">
+            <h1 class="display-5 fw-bold lh-1 mb-3"><?= $poll['title'] ?></h1>
+            <p class="lead"><?= $poll['description'] ?>
+            </p>
+        </div>
+        <div class="col-lg-6">
+            <h2>Résultats</h2>
+            <div class="results">
+                <?php foreach ($results as $index => $result) {
                     if ($totalUsers) {
                         // calcul
                         $resultPercent = $result['votes'] / $totalUsers * 100;
@@ -45,24 +45,24 @@ if (!$error_404) {
                         $resultPercent = 0;
                     }
                     ?>
-            <h3><?= $result['name'] ?> </h3>
-            <div class="progress " role="progressbar" aria-label="<?= $result['name']; ?>"
-                aria-valuenow="<?= $resultPercent; ?>" aria-valuemin="0" aria-valuemax="100">
-                <div class="progress-bar progress-bar-striped progress-color-<?= $index ?>"
-                    style="width: <?= $resultPercent; ?>%">
-                    <?= $result['name']; ?>
-                    <?= round($resultPercent, 2); ?>%
-                </div>
+                    <h3><?= $result['name'] ?> </h3>
+                    <div class="progress " role="progressbar" aria-label="<?= $result['name']; ?>"
+                        aria-valuenow="<?= $resultPercent; ?>" aria-valuemin="0" aria-valuemax="100">
+                        <div class="progress-bar progress-bar-striped progress-color-<?= $index ?>"
+                            style="width: <?= $resultPercent; ?>%">
+                            <?= $result['name']; ?>
+                            <?= round($resultPercent, 2); ?>%
+                        </div>
+                    </div>
+                <?php } ?>
+
+
             </div>
-            <?php } ?>
-
-
         </div>
     </div>
-</div>
 <?php } else {
     ?>
-<h1>Ce sondage n'existe pas</h1>
+    <h1>Ce sondage n'existe pas</h1>
 <?php } ?>
 
 
