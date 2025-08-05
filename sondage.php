@@ -12,6 +12,9 @@ if (isset($_GET['id'])){
     if($poll){
         $pageTitle = $poll['title'];
         $results = getPollResultsByPollId($pdo, $id);
+
+
+    getPollTotalUsersByPollId($pdo, $id);  
     } else {
         $error_404 = true;
         // ou bien : header("Location: page.php");exit(); --> ⚠️ exit(); est fortement recommandé juste après pour éviter d’exécuter du code en trop.
