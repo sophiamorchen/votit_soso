@@ -13,6 +13,8 @@ if (isset($_GET['id'])) {
         $pageTitle = $poll['title'];
         $results = getPollResultsByPollId($pdo, $id);
         $totalUsers = getPollTotalUsersByPollId($pdo, $id);
+
+        $items = getPollItems($pdo, $id);
     } else {
         $error_404 = true;
         // ou bien : header("Location: page.php");exit(); --> ⚠️ exit(); est fortement recommandé juste après pour éviter d’exécuter du code en trop.
@@ -45,30 +47,41 @@ if (!$error_404) {
                         $resultPercent = 0;
                     }
                     ?>
-                    <h3><?= $result['name'] ?> </h3>
-                    <div class="progress " role="progressbar" aria-label="<?= $result['name']; ?>"
-                        aria-valuenow="<?= $resultPercent; ?>" aria-valuemin="0" aria-valuemax="100">
-                        <div class="progress-bar progress-bar-striped progress-color-<?= $index ?>"
-                            style="width: <?= $resultPercent; ?>%">
-                            <?= $result['name']; ?>
-                            <?= round($resultPercent, 2); ?>%
+                        <h3><?= $result['name'] ?> </h3>
+                        <div class="progress " role="progressbar" aria-label="<?= $result['name']; ?>"
+                            aria-valuenow="<?= $resultPercent; ?>" aria-valuemin="0" aria-valuemax="100">
+                            <div class="progress-bar progress-bar-striped progress-color-<?= $index ?>"style="width: <?= $resultPercent; ?>%">
+                                <?= $result['name'];
+                                round($resultPercent, 2); ?>%
+                            </div>
                         </div>
-                    </div>
                 <?php } ?>
-
-
+            </div>
+            <div class="mt-5">
+                <?php if (isset($_SESSION['user'])) { ?>
+                    <div>
+                        <form action="POST">
+                            <h2>Votez pour ce sondage :</h2>
+                            <h3> <?= $poll['title']; ?></h3>
+                            <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
+                            <?php foreach ($items as $key => $item) { ?>
+                                                    <input type="checkbox" class="btn-check" id="btncheck<?= $item['id']; ?>" autocomplete="off" value="<?= $item['id']; ?>">
+                                                    <label class="btn btn-outline-primary" for="btncheck<?= $item['id']; ?>"><?= $item['name']; ?></label>
+                                <?php } ?>
+                            </div>
+                        </form>
+                            </div>
+                    <?php } else { ?>
+                            <div class="alert alert-warning">
+                                Vous devez être connectés pour voter
+                            </div>
+                <?php } ?>
             </div>
         </div>
     </div>
-<?php } else {
-    ?>
-    <h1>Ce sondage n'existe pas</h1>
+<?php } else { ?>
+        <h1>Ce sondage n'existe pas</h1>
 <?php } ?>
-
-
-
-
-
 
 
 

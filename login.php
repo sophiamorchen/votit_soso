@@ -12,19 +12,24 @@ if (isset($_POST['loginUser'])) {
 
     if ($user) {
         // on veut connecter l'utilisateur
+
+        // Changemt de session après la co : empêche qu’un pirate utilise un ID de session fixé avant la connexion de l’utilisateur = protège contre l’attaque de fixation de session.
+        session_regenerate_id(true);
+        $_SESSION['user'] = $user;
+        header('location: index.php');
+
     } else {
         // erreur
         $errors[] = 'Les identifiants sont incorrects';
     }
 }
-
 ?>
 <h1>Connexion</h1>
 
 <?php foreach ($errors as $error) { ?>
-<div class="alert alert-danger" role="alert">
-    <?= $error; ?>
-</div>
+                <div class="alert alert-danger" role="alert">
+                    <?= $error; ?>
+                </div>
 <?php } ?>
 
 
