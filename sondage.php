@@ -2,7 +2,7 @@
 require_once 'lib/poll.php';
 
 
-$error_404 = false;
+$error404 = false;
 
 if (isset($_GET['id'])) {
     // /!\  type STRING à changer car méthode getPollById attend du INT cela s'appelle un "cast"
@@ -11,25 +11,31 @@ if (isset($_GET['id'])) {
     $poll = getPollById($pdo, $id);
     if ($poll) {
         $pageTitle = $poll['title'];
+
+        if (isset($_SESSION['user']) && isset($_POST['voteSubmit'])){
+            removeVotesByPollIdAndUserId($pdo, $id, (int)$_SESSION['user']['id']);
+            $res = addVote($pdo, (int)$_SESSION['user']['id'], $_POST['items']);   
+        }
         $results = getPollResultsByPollId($pdo, $id);
         $totalUsers = getPollTotalUsersByPollId($pdo, $id);
-
+        
         $items = getPollItems($pdo, $id);
+
     } else {
-        $error_404 = true;
+        $error404 = true;
         // ou bien : header("Location: page.php");exit(); --> ⚠️ exit(); est fortement recommandé juste après pour éviter d’exécuter du code en trop.
     }
 
-} else {
-    $error_404 = true;
-}
+    } else {
+        $error404 = true;
+    }
 
 
-require_once 'templates/header.php';
+    require_once 'templates/header.php';
 
 
-if (!$error_404) {
-    ?>
+
+    if (!$error404) {?>
     <div class="row align-items-center g-5 py-5">
         <div class="col-lg-6">
             <h1 class="display-5 fw-bold lh-1 mb-3"><?= $poll['title'] ?></h1>
@@ -51,8 +57,7 @@ if (!$error_404) {
                         <div class="progress " role="progressbar" aria-label="<?= $result['name']; ?>"
                             aria-valuenow="<?= $resultPercent; ?>" aria-valuemin="0" aria-valuemax="100">
                             <div class="progress-bar progress-bar-striped progress-color-<?= $index ?>"style="width: <?= $resultPercent; ?>%">
-                                <?= $result['name'];
-                                round($resultPercent, 2); ?>%
+                                <?= $result['name']; ?> <?= round($resultPercent, 2); ?>%
                             </div>
                         </div>
                 <?php } ?>
@@ -60,27 +65,31 @@ if (!$error_404) {
             <div class="mt-5">
                 <?php if (isset($_SESSION['user'])) { ?>
                     <div>
-                        <form action="POST">
+                        <form method="POST">
                             <h2>Votez pour ce sondage :</h2>
                             <h3> <?= $poll['title']; ?></h3>
                             <div class="btn-group" role="group" aria-label="Basic checkbox toggle button group">
                             <?php foreach ($items as $key => $item) { ?>
-                                                    <input type="checkbox" class="btn-check" id="btncheck<?= $item['id']; ?>" autocomplete="off" value="<?= $item['id']; ?>">
-                                                    <label class="btn btn-outline-primary" for="btncheck<?= $item['id']; ?>"><?= $item['name']; ?></label>
-                                <?php } ?>
+                                <?php // très important ici de mettre les id correspondant pour que les checkbox fonctionnent id="btncheck1" "btncheck2" etc ..?>
+                                <input type="checkbox" class="btn-check" id="btncheck<?= $item['id']; ?>" autocomplete="off" value="<?= $item['id']; ?>" name="items[]">
+                                <label class="btn btn-outline-primary" for="btncheck<?= $item['id']; ?>"><?= $item['name']; ?></label>
+                            <?php } ?>
+                            </div>
+                            <div class="mt-3">
+                                <input type="submit" name="voteSubmit" class="btn btn-primary" value="voter">
                             </div>
                         </form>
-                            </div>
-                    <?php } else { ?>
-                            <div class="alert alert-warning">
-                                Vous devez être connectés pour voter
-                            </div>
+                    </div>
+                <?php } else { ?>
+                    <div class="alert alert-warning">
+                        Vous devez être connectés pour voter
+                    </div>
                 <?php } ?>
             </div>
         </div>
     </div>
 <?php } else { ?>
-        <h1>Ce sondage n'existe pas</h1>
+    <h1>Ce sondage n'existe pas</h1>
 <?php } ?>
 
 
