@@ -74,7 +74,7 @@ function getPollItems(PDO $pdo, int $id): array
     return $query->fetchAll(PDO::FETCH_ASSOC);
 }
 
-function addVote (PDO $pdo, int $user_id, array $items ) 
+function addVote (PDO $pdo, int $user_id, array $items) 
 {
     $query = $pdo->prepare("INSERT INTO user_poll_item(user_id, poll_item_id) 
                                     VALUES(:user_id, :poll_item_id)");
@@ -101,5 +101,23 @@ function removeVotesByPollIdAndUserId(PDO $pdo, int $poll_id, int $user_id)
     $query->bindValue(':poll_id', $poll_id, PDO::PARAM_INT);
     $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
     return $query->execute();
+
+}
+
+function savePoll(PDO $pdo, string $title, string $description, int $category_id, int $user_id):bool|int
+{
+    $query = $pdo->prepare("INSERT INTO poll(title, description, category_id, user_id) 
+                                    VALUES(:title, :description, :category_id, :user_id)");
+    
+    $query->bindValue(':title', $title, PDO::PARAM_STR);
+    $query->bindValue(':description', $description, PDO::PARAM_STR);
+    $query->bindValue(':category_id', $category_id, PDO::PARAM_INT);
+    $query->bindValue(':user_id', $user_id, PDO::PARAM_INT);
+
+    if($query->execute()) {
+        return $pdo->lastInsertId();
+    } else {
+        return false;
+    }
 
 }

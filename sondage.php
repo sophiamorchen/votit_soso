@@ -1,8 +1,12 @@
-<?php require_once 'lib/required_files.php';
+<?php 
+require_once 'lib/required_files.php';
 require_once 'lib/poll.php';
 
 
 $error404 = false;
+
+$messages = [];
+$errors = [];
 
 if (isset($_GET['id'])) {
     // /!\  type STRING à changer car méthode getPollById attend du INT cela s'appelle un "cast"
@@ -13,8 +17,17 @@ if (isset($_GET['id'])) {
         $pageTitle = $poll['title'];
 
         if (isset($_SESSION['user']) && isset($_POST['voteSubmit'])){
-            removeVotesByPollIdAndUserId($pdo, $id, (int)$_SESSION['user']['id']);
-            $res = addVote($pdo, (int)$_SESSION['user']['id'], $_POST['items']);   
+            if(empty($_POST['items'])){
+                $errors[]= "Vous devez sélectionner au moins un vote";
+            } else {
+                removeVotesByPollIdAndUserId($pdo, $id, (int)$_SESSION['user']['id']);
+                $resAddVote = addVote($pdo, (int)$_SESSION['user']['id'], $_POST['items']);   
+                if ($resAddVote) {
+                    $messages[] = "Votre vote a bien été pris en compte.";
+                } else {
+                    $errors[] = "Une erreur est survenue pendant l'ajout du vote.";
+                }
+            }
         }
         $results = getPollResultsByPollId($pdo, $id);
         $totalUsers = getPollTotalUsersByPollId($pdo, $id);
@@ -75,6 +88,20 @@ if (isset($_GET['id'])) {
                                 <label class="btn btn-outline-primary" for="btncheck<?= $item['id']; ?>"><?= $item['name']; ?></label>
                             <?php } ?>
                             </div>
+                            <?php if($messages){?>
+                                <?php foreach($messages as $message){?>
+                                <div class="alert alert-success mt-2" role="alert">
+                            <?= $message?>
+                                </div>
+                                <?php }?>
+                            <?php } ?>
+                            <?php if($errors){?>
+                                <?php foreach($errors as $error){?>
+                                <div class="alert alert-danger mt-2" role="alert">
+                            <?= $error?>
+                                </div>
+                                <?php }?>
+                            <?php } ?>
                             <div class="mt-3">
                                 <input type="submit" name="voteSubmit" class="btn btn-primary" value="voter">
                             </div>
